@@ -2,7 +2,7 @@
 export const dynamic = "force-dynamic";
 
 import { useEffect, useState } from 'react';
-import { supabase } from '../lib/supabase';
+import { getSupabaseClient } from '../lib/supabase'; // ✅ fixed name
 
 interface Bookmark {
   id: number;
@@ -12,6 +12,9 @@ interface Bookmark {
 }
 
 export default function Home() {
+
+  const supabase = getSupabaseClient(); // ✅ THIS LINE ADDED (very important)
+
   const [user, setUser] = useState<any>(null);
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
   const [title, setTitle] = useState('');
@@ -94,7 +97,7 @@ export default function Home() {
         .subscribe();
     } catch (err) {
       console.warn('Realtime failed, falling back to polling', err);
-      setRealtimeAvailable(false); // disables polling hook
+      setRealtimeAvailable(false);
     }
 
     return () => {
@@ -165,7 +168,6 @@ export default function Home() {
         Logout
       </button>
 
-      {/* Add Bookmark Form */}
       <form onSubmit={addBookmark} className="flex flex-col gap-2 w-full max-w-md">
         <input
           type="text"
@@ -186,7 +188,6 @@ export default function Home() {
         </button>
       </form>
 
-      {/* Bookmark List */}
       <div className="w-full max-w-md">
         <h3 className="text-lg font-semibold mb-2">Your Bookmarks:</h3>
         {bookmarks.length === 0 ? (
