@@ -1,36 +1,84 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Smart Bookmark App
 
-## Getting Started
+A simple, user-specific bookmark manager built with **Next.js**, **Supabase**, and **Tailwind CSS**, deployed on **Vercel**.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Live Demo
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+[Smart Bookmark App Live](https://smart-bookmark-app-six-green.vercel.app/)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## GitHub Repository
 
-## Learn More
+[Smart Bookmark App Repo](https://github.com/411521104055/smart-bookmark-app)
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Tech Stack
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **Frontend:** Next.js (App Router) + Tailwind CSS  
+- **Authentication & Database:** Supabase (Auth, Database, Realtime)  
+- **Hosting:** Vercel  
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Features Implemented
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. **Google OAuth Login**  
+   - Users can sign in using only Google (no email/password required).  
+
+2. **Add Bookmark**  
+   - Logged-in users can add a bookmark with a title and URL.  
+
+3. **User-Specific Bookmarks**  
+   - Bookmarks are private. User A cannot see User B's bookmarks.  
+   - Implemented via Supabase Row-Level Security (RLS) policies.
+
+4. **Real-time Updates**  
+   - Bookmark list updates automatically across tabs without refresh.  
+   - Fallback polling is included if WebSocket fails.
+
+5. **Delete Bookmark**  
+   - Users can delete only their own bookmarks.
+
+6. **Deployed on Vercel**  
+   - Live URL available for testing login and CRUD features.
+
+---
+
+## Challenges & Solutions
+
+- **Supabase RLS Policies:**  
+  - Needed to ensure each user only sees their own bookmarks.  
+  - Solution: Enabled RLS and created `SELECT`, `INSERT`, `DELETE` policies using `auth.uid()`.
+
+- **Realtime WebSocket Errors:**  
+  - WebSocket sometimes failed in deployment environment.  
+  - Solution: Added fallback polling every 2 seconds to ensure data consistency.
+
+- **Next.js Prerender Errors on Vercel:**  
+  - `supabaseUrl` missing during build.  
+  - Solution: Added `export const dynamic = "force-dynamic";` in `page.tsx` and ensured environment variables are set in Vercel.
+
+- **GitHub & Vercel Authentication Issues:**  
+  - Initially pushing with wrong GitHub account caused permission errors.  
+  - Solution: Created SSH key, added it to GitHub, switched remote URL to SSH, and successfully deployed.
+
+---
+
+## Installation / Local Setup
+
+1. **Clone the repository**  
+   ```bash
+   git clone git@github.com:411521104055/smart-bookmark-app.git
+   cd smart-bookmark-app
+2. **Install dependencies**
+    npm install
+3. **Create a .env.local file in the root**
+    NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
+    NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
+4.  **Run Locally**
+     npm run dev
+     Open http://localhost:3000 to see the app.
